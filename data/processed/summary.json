@@ -1,0 +1,15 @@
+{
+  "polling_units_total": 176846,
+  "located_candidate": 97569,
+  "ward_estimate": 36191,
+  "lga_estimate": 36926,
+  "state_estimate": 6160,
+  "no_admin_geometry": 0,
+  "ward_polygons": 9410,
+  "house_constituencies": 360,
+  "senate_districts": 109,
+  "states": 37,
+  "coordinate_match_method": "Normalized state + LGA + ward + polling-unit name; unique coordinate only; 4\u201314N and 2.5\u201315E bounding box",
+  "coordinate_source": "Mykeels INEC polling units CSV, Google Places-derived and unverified",
+  "ward_source": "ArcGIS NGA Ward Boundaries operational layer (national coverage)"
+}

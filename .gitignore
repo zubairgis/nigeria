@@ -1,0 +1,3 @@
+__pycache__/
+*.py[cod]
+data/source/worldpop_2026_agesex_1km.zip

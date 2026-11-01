@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Nigeria election information and polling-unit coverage dashboard for the Nigeria Democratic Congress.">
+<title>NDC | Nigeria Election Information System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<header class="topbar"><div class="brand"><img src="assets/ndc-logo.jpg" alt="Nigeria Democratic Congress logo"><div><div class="eyebrow">NIGERIA DEMOCRATIC CONGRESS</div><h1>Election Information System</h1></div></div><div class="top-actions"><span class="live-dot"></span><span>2027 readiness workspace</span><button id="aboutBtn" class="icon-btn" aria-label="About this dashboard">About</button></div></header>
+<main>
+<section class="intro"><div><div class="eyebrow accent">NATIONAL OPERATIONS VIEW</div><h2>See the electoral landscape.</h2><p>Polling-unit coverage, constituency history and population context in one map.</p></div><div class="intro-meta"><span>DATA SNAPSHOT</span><b>2019 · 2023 · WorldPop 2026</b></div></section>
+<section class="kpis" aria-label="Dashboard summary"><article class="kpi"><div class="kpi-label">POLLING UNITS</div><strong id="totalPU">176,846</strong><small>from supplied INEC unit listing</small></article><article class="kpi blue"><div class="kpi-label">CANDIDATE LOCATIONS</div><strong id="locatedPU">97,567</strong><small><i class="dot blue-dot"></i>name-matched geocodes · unverified</small></article><article class="kpi red"><div class="kpi-label">ESTIMATED LOCATIONS</div><strong id="estimatedPU">79,279</strong><small><i class="dot red-dot"></i>ward / admin area proxies</small></article><article class="kpi"><div class="kpi-label">HOUSE CONSTITUENCIES</div><strong>360</strong><small>attached constituency boundaries</small></article><article class="kpi"><div class="kpi-label">SENATE DISTRICTS</div><strong>109</strong><small>attached district boundaries</small></article></section>
+<section class="workspace">
+<aside class="sidebar">
+<div class="panel-head"><div><div class="eyebrow">EXPLORE</div><h3>Map controls</h3></div><span class="badge">NATIONAL</span></div>
+<label class="field-label" for="stateFilter">State</label><select id="stateFilter"><option value="">All states</option></select>
+<label class="field-label" for="lgaFilter">LGA</label><select id="lgaFilter" disabled><option value="">All LGAs</option></select>
+<div class="field-row"><div><label class="field-label" for="yearFilter">Election year</label><select id="yearFilter"><option value="2019">2019</option><option value="2023" selected>2023</option></select></div><div><label class="field-label" for="boundaryFilter">Boundary</label><select id="boundaryFilter"><option value="house">House</option><option value="senate">Senate</option><option value="lga">LGA</option><option value="state">State</option></select></div></div>
+<div class="toggle-list"><label><input type="checkbox" id="showBlue" checked><span class="swatch blue-swatch"></span>Candidate polling-unit locations</label><label><input type="checkbox" id="showRed" checked><span class="swatch red-swatch"></span>Estimated polling-unit locations</label></div>
+<div class="legend-note">Blue points are supplemental Google Places matches. Red points are representative points for a ward or fallback administrative area. Neither source is verified INEC GPS.</div>
+<div class="divider"></div>
+<div class="panel-head"><div><div class="eyebrow">SELECTED AREA</div><h3 id="areaTitle">Nigeria</h3></div></div>
+<div id="areaDetails" class="area-details"><p>Select a boundary on the map to inspect election fields.</p></div>
+<div class="divider"></div>
+<div class="panel-head"><div><div class="eyebrow">FIND A UNIT</div><h3>Polling-unit search</h3></div></div>
+<input id="puSearch" class="search" placeholder="Name, code, ward or LGA" autocomplete="off"><div id="searchResults" class="search-results"><span>Enter 3 or more characters.</span></div>
+</aside>
+<div class="map-wrap"><div id="map"></div><div class="map-top"><span id="layerLabel">HOUSE CONSTITUENCIES · 2023</span><button id="resetMap">Reset view</button></div><div id="mapError" class="map-error" hidden>Map data did not load. Open this site through GitHub Pages or a local web server.</div><div class="map-attribution">Boundaries and locations are indicative; see source notes.</div></div>
+</section>
+<section class="lower-grid">
+<article class="content-card results-card"><div class="card-heading"><div><div class="eyebrow">ELECTION HISTORY</div><h3>Constituency result summary</h3></div><span class="badge">WINNING PARTY ONLY</span></div><p>Attached House constituency data reports the winning party for 2019 and 2023; it does not include candidate vote totals.</p><div id="partySummary" class="party-summary"></div></article>
+<article class="content-card demo-card"><div class="card-heading"><div><div class="eyebrow">POPULATION CONTEXT</div><h3>WorldPop 2026 age & sex</h3></div><span class="badge green-badge">MODELLED ESTIMATE</span></div><div id="demoContent"><p>Constituency summaries are loaded from the WorldPop 2026 age-sex estimates when <code>data/processed/constituency_age_sex_2026.csv</code> is added.</p><div class="demo-note">These are gridded population estimates, not voter-registration data. Estimated adult population is not the same as eligible or registered voters.</div></div></article>
+</section>
+<section class="content-card agents-card"><div class="card-heading"><div><div class="eyebrow">FIELD TEAM</div><h3>Polling-agent registration</h3></div><span class="badge">KOBO XLSFORM</span></div><p>Register agents through your private KoboToolbox account. The form collects name, age, mobile number and a state → LGA → ward → polling-unit selection.</p><div class="agent-actions"><a class="primary-btn" href="kobo/ndc_polling_agent_registration.xlsx" download>Download Kobo XLSForm</a><a class="secondary-btn" href="https://github.com/zubairgis/nigeria/blob/main/kobo/README.md">Deployment and privacy notes</a></div><div class="privacy-note"><strong>Agent records are private.</strong> Do not publish Kobo submissions or agent names, ages or phone numbers in this public GitHub repository. Complete the controller/contact and retention fields in the form before deployment.</div></section>
+<footer><span>Prepared for the Nigeria Democratic Congress</span><span>Source and methodology notes in <a href="https://github.com/zubairgis/nigeria#sources-and-attribution">README and source data</a></span></footer>
+</main>
+<dialog id="aboutDialog"><button class="dialog-close" id="closeAbout" aria-label="Close">×</button><div class="eyebrow">ABOUT THIS VIEW</div><h2>Election information with source transparency.</h2><p>The dashboard combines supplied constituency, Senate, state and LGA boundary files with a polling-unit listing and supplemental geocodes. 2019/2023 fields are historical summaries. No 2027 election result or voter register is represented.</p><p>Map points have different confidence levels. Inspect each polling unit’s <code>coordinate_source</code> and <code>location_status</code> attributes. Estimated points are not precise polling locations.</p><a href="README.md">Read data sources and limitations →</a></dialog>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script src="assets/app.js"></script>
+</body></html>
