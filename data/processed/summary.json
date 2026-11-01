@@ -1,9 +1,9 @@
 {
   "polling_units_total": 176846,
   "located_candidate": 97569,
-  "ward_estimate": 36191,
-  "lga_estimate": 36926,
-  "state_estimate": 6160,
+  "ward_estimate": 36410,
+  "lga_estimate": 36747,
+  "state_estimate": 6120,
   "no_admin_geometry": 0,
   "ward_polygons": 9410,
   "house_constituencies": 360,

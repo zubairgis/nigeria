@@ -20,6 +20,9 @@ def get_json(url):
     with urllib.request.urlopen(req,timeout=120) as r: return json.load(r)
 
 def norm(v): return re.sub(r'[^A-Z0-9]','',str(v or '').upper())
+def norm_ward(v):
+    s=norm(v).replace('WARD','')
+    return re.sub(r'(?<![0-9])0+([0-9]+)',r'\1',s)
 def gzip_json(obj,path):
     with gzip.open(path,'wt',encoding='utf-8',compresslevel=7) as f: json.dump(obj,f,separators=(',',':'),ensure_ascii=False)
 def fix_geom(feature, transformer=None):
@@ -56,19 +59,20 @@ if not ward_file.exists():
     with gzip.open(ward_file,'wt',encoding='utf8',compresslevel=7) as f: json.dump({'type':'FeatureCollection','features':features},f,separators=(',',':'))
 with gzip.open(ward_file,'rt',encoding='utf-8') as f: wards=json.load(f)
 # Lookup operational ward and LGA polygons; unmatched ward labels fall back to an LGA representative point.
-ward_lookup={}
+ward_lookup=defaultdict(list)
 ward_counts=defaultdict(int)
 lga_lookup={}
 for f in wards['features']:
     p=f.get('properties',{})
-    key='|'.join(norm(p.get(k)) for k in ['statename','lganame','wardname'])
+    key='|'.join([norm(p.get('statename')),norm(p.get('lganame')),norm_ward(p.get('wardname'))])
     if key.strip('|'):
         try:
             g=shape(f['geometry']); rp=g.representative_point()
-            ward_lookup[key]=(rp.x,rp.y)
+            ward_lookup[key].append((rp.x,rp.y))
             lk='|'.join(norm(p.get(k)) for k in ['statename','lganame'])
             lga_lookup.setdefault(lk,[]).append(g)
         except Exception: pass
+ward_lookup={key:points[0] for key,points in ward_lookup.items() if len(points)==1}
 # Build conservative exact normalized name-key coordinate candidates from the supplemental Google Places CSV.
 coord_path=SRC/'mykeels-polling-units.csv'
 if not coord_path.exists() and not (SRC/'mykeels-polling-units.csv.gz').exists():
@@ -116,7 +120,7 @@ with poll_open as f:
             lat,lng=next(iter(c)); status='located_candidate'; source='Mykeels polling-unit Google Places geocodes; name-matched and Nigeria-bbox filtered; unverified'
             located+=1
         else:
-            wkey='|'.join(norm(row.get(k)) for k in ['state_name','lga_name','ward_name'])
+            wkey='|'.join([norm(row.get('state_name')),norm(row.get('lga_name')),norm_ward(row.get('ward_name'))])
             point=ward_lookup.get(wkey)
             if point is not None:
                 lng,lat=point; status='ward_estimate'; source='Operational ward polygon representative point; estimated, not polling-unit coordinates'; ward_est+=1
