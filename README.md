@@ -4,7 +4,7 @@ A static, browser-based election operations dashboard for the Nigeria Democratic
 
 ## Run and publish
 
-Open `index.html` through a local HTTP server (for example, `python -m http.server 8000`) or enable **Settings → Pages → Build and deployment → GitHub Actions**. The included workflow deploys the static dashboard to GitHub Pages from `main`; the expected URL is `https://zubairgis.github.io/nigeria/` once Pages is enabled.
+Open `index.html` through a local HTTP server (for example, `python -m http.server 8000`) or publish it with GitHub Pages by selecting **Settings → Pages → Deploy from a branch → main → /(root)** and clicking **Save**. The expected site URL is `https://zubairgis.github.io/nigeria/`.
 
 The dashboard does not require a database or API key. Map tiles and MapLibre GL JS load from external public services, so an internet connection is needed.
 
